@@ -1,0 +1,35 @@
+@import '@/styles/var.scss';
+@import '@/styles/bem.scss';
+@import '@/styles/utils.scss';
+
+@include b(todo-inputbar) {
+  padding: 18px 20px;
+  background-color: #fff;
+  display: flex;
+
+  @include e(input) {
+    @include utils-input-placeholder() {
+      font-style: italic;
+      color: $work-main-color;
+    }
+    font-size: 16px;
+    border: none;
+    background-color: transparent;
+    flex: 1 1 100%;
+    outline: none;
+    appearance: none;
+    box-shadow: none;
+  }
+
+  @include e(btn-submit) {
+    flex: 0 0 auto;
+    height: 24px;
+    width: 24px;
+    border: none;
+    background-color: transparent;
+    color: $work-main-color;
+    margin: 0;
+    padding: 0;
+    outline: none;
+  }
+}
