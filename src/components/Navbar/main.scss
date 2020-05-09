@@ -1,0 +1,44 @@
+@import '@/styles/var.scss';
+@import '@/styles/bem.scss';
+
+$width: 36px;
+
+@include b(navbar) {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: $width;
+  height: 100%;
+
+  @include e(actions) {
+    flex: 1 1 100%;
+
+    @include e(item) {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: $width;
+      height: $width;
+      color: #fff;
+      cursor: pointer;
+
+      & + .navbar__item {
+        margin-top: 48px;
+      }
+
+      .material-icons {
+        font-size: $width;
+      }
+    }
+  }
+
+  @include e(logo) {
+    font-size: 24px;
+    line-height: $width;
+    letter-spacing: 0px;
+    color: #fff;
+    writing-mode: vertical-rl;
+    font-weight: bold;
+  }
+}
