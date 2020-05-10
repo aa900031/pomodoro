@@ -3,6 +3,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 import { CombinedVueInstance } from 'vue/types/vue';
 import Checkbox from '@/components/Checkbox/Main.vue';
 import { Props as CheckboxProps, Event as CheckboxEvent } from '@/components/Checkbox/main';
+import { TodoItem } from '@/models/todo-item';
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<Instance, Data, Methods, Computed, Props>;
 
@@ -26,8 +27,7 @@ export interface Computed {
 }
 
 export interface Props {
-  checked: boolean
-  text: string
+  data: TodoItem,
 }
 
 export const enum Event {
@@ -35,23 +35,24 @@ export const enum Event {
   ClickPlay = 'click-play',
 }
 
+export type Handlers = {
+  [Event.ClickCheckbox](data: Props['data']): void
+  [Event.ClickPlay](data: Props['data']): void
+}
+
 const options: ComponentOption = {
   name: 'TodoItem',
 
   props: {
-    checked: {
-      type: Boolean,
+    data: {
+      type: Object,
       required: true,
-    },
-    text: {
-      type: String,
-      required: true,
-    },
+    }
   },
 
   computed: {
     checkboxIconName() {
-      return this.checked ? 'radio_button_checked' : 'radio_button_unchecked'
+      return this.data.complete ? 'radio_button_checked' : 'radio_button_unchecked'
     },
   },
 
@@ -66,14 +67,14 @@ const options: ComponentOption = {
 
   render(h) {
     const checkboxProps: CheckboxProps = {
-      checked: this.checked,
+      checked: this.data.complete,
     }
     const checkboxListeners = {
       [CheckboxEvent.Click]: this.handleCheckboxClick
     }
     return h('div', { staticClass: 'todo-item' }, [
       h(Checkbox, { props: checkboxProps, on: checkboxListeners }),
-      h('div', { staticClass: 'todo-item__text' }, this.text),
+      h('div', { staticClass: 'todo-item__text' }, this.data.name),
       h('div', { staticClass: 'todo-item__btn-play', on: { click: this.handlePlayClick } }, [
         h('span', { staticClass: 'material-icons' }, 'play_circle_outline'),
       ])

@@ -73,7 +73,6 @@ const options: ComponentOption = {
       }
 
       const formData: FormData = cloneFormData(this.formData)
-      console.log(formData);
 
       this.$emit(Event.Submit, formData)
       this.formData = craeteFormData()
