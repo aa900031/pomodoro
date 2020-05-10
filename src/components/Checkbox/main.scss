@@ -1,0 +1,7 @@
+@import '@/styles/var.scss';
+@import '@/styles/bem.scss';
+
+@include b(checkbox) {
+  cursor: pointer;
+  color: $work-text-color;
+}

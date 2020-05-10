@@ -8,11 +8,10 @@
   padding: 12px 0;
   border-bottom: 1px solid mix(#fff, $base-bg-color, 80%);
 
-  @include e(checkbox) {
+  .checkbox {
     flex: 0 0 auto;
     width: 24px;
     height: 24px;
-    cursor: pointer;
   }
 
   @include e(text) {

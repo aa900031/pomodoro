@@ -1,0 +1,41 @@
+@import '@/styles/var.scss';
+@import '@/styles/bem.scss';
+@import '@/styles/utils.scss';
+
+@include b(pomodoro-item) {
+
+  @include e(todo-info) {
+    display: flex;
+    flex-direction: row;
+
+    .checkbox {
+      width: 48px;
+      height: 48px;
+
+      &::v-deep .material-icons {
+        font-size: 48px;
+      }
+    }
+
+    @include e(todo-content) {
+      margin-left: 16px;
+
+      @include e(text) {
+        color: $work-text-color;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      @include e(counter-list) {
+        margin-top: 8px;
+        display: flex;
+      }
+    }
+  }
+
+  @include e(timer) {
+    color: $work-main-color;
+    font-size: 176px;
+    font-weight: bold;
+  }
+}

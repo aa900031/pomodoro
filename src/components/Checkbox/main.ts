@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 import { CombinedVueInstance } from 'vue/types/vue';
-import Checkbox from '@/components/Checkbox/Main.vue';
-import { Props as CheckboxProps, Event as CheckboxEvent } from '@/components/Checkbox/main';
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<Instance, Data, Methods, Computed, Props>;
 
@@ -18,7 +16,6 @@ export interface Data {
 
 export interface Methods {
   handleCheckboxClick(): void
-  handlePlayClick(): void
 }
 
 export interface Computed {
@@ -27,24 +24,18 @@ export interface Computed {
 
 export interface Props {
   checked: boolean
-  text: string
 }
 
 export const enum Event {
-  ClickCheckbox = 'click-checkbox',
-  ClickPlay = 'click-play',
+  Click = 'click',
 }
 
 const options: ComponentOption = {
-  name: 'TodoItem',
+  name: 'Checkbox',
 
   props: {
     checked: {
       type: Boolean,
-      required: true,
-    },
-    text: {
-      type: String,
       required: true,
     },
   },
@@ -57,27 +48,14 @@ const options: ComponentOption = {
 
   methods: {
     handleCheckboxClick() {
-      this.$emit(Event.ClickCheckbox)
-    },
-    handlePlayClick() {
-      this.$emit(Event.ClickPlay)
+      this.$emit(Event.Click)
     },
   },
 
   render(h) {
-    const checkboxProps: CheckboxProps = {
-      checked: this.checked,
-    }
-    const checkboxListeners = {
-      [CheckboxEvent.Click]: this.handleCheckboxClick
-    }
-    return h('div', { staticClass: 'todo-item' }, [
-      h(Checkbox, { props: checkboxProps, on: checkboxListeners }),
-      h('div', { staticClass: 'todo-item__text' }, this.text),
-      h('div', { staticClass: 'todo-item__btn-play', on: { click: this.handlePlayClick } }, [
-        h('span', { staticClass: 'material-icons' }, 'play_circle_outline'),
-      ])
-    ]);
+    return h('div', { staticClass: 'checkbox', on: { click: this.handleCheckboxClick } }, [
+      h('span', { staticClass: 'material-icons' }, this.checkboxIconName),
+    ])
   },
 };
 
