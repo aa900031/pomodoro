@@ -111,9 +111,17 @@ export const regist = <RS>(store: Store<RS>, path: string = 'todo') => {
       [Getter.NextItemById]: (state): GetterValue[Getter.NextItemById] => (id) => {
         const currentIndex = state.indexes.indexOf(id)
         if (currentIndex < 0) return null
-        const nextId = state.indexes[currentIndex + 1]
-        if (!nextId) return null
-        return state.data[nextId]
+        const findCorrectItem = (currentIndex: number): TodoItem | null => {
+          const nextIndex = currentIndex + 1
+          const nextId = state.indexes[nextIndex]
+          if (!nextId) return null
+          const item = state.data[nextId]
+          if (!item) return null
+          if (item.complete) return findCorrectItem(nextIndex)
+          return item
+        }
+
+        return findCorrectItem(currentIndex)
       }
     },
 
