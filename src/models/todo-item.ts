@@ -5,3 +5,11 @@ export interface TodoItem {
   name: string
   complete: boolean
 }
+
+export const createTodoItem = (name: string): TodoItem => {
+  return {
+    id: Date.now().toString(),
+    name,
+    complete: false
+  }
+}
