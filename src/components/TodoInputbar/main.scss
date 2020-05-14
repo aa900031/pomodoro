@@ -7,10 +7,31 @@
   background-color: #fff;
   display: flex;
 
+  @include when(work) {
+    @include e(input) {
+      @include utils-input-placeholder {
+        color: $work-main-color;
+      }
+    }
+    @include e(btn-submit) {
+      color: $work-main-color;
+    }
+  }
+
+  @include when(break) {
+    @include e(input) {
+      @include utils-input-placeholder {
+        color: $break-main-color;
+      }
+    }
+    @include e(btn-submit) {
+      color: $break-main-color;
+    }
+  }
+
   @include e(input) {
     @include utils-input-placeholder() {
       font-style: italic;
-      color: $work-main-color;
     }
     font-size: 16px;
     border: none;
@@ -27,7 +48,6 @@
     width: 24px;
     border: none;
     background-color: transparent;
-    color: $work-main-color;
     margin: 0;
     padding: 0;
     outline: none;

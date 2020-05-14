@@ -1,6 +1,7 @@
 import Vue from 'vue';
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
+import { ThisTypedComponentOptionsWithRecordProps, PropType } from 'vue/types/options';
 import { CombinedVueInstance } from 'vue/types/vue';
+import { State as PomodoroState } from '@/models/pomodoro-item';
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<Instance, Data, Methods, Computed, Props>;
 
@@ -21,11 +22,11 @@ export interface Methods {
 }
 
 export interface Computed {
-
+  rootClassName: string[]
 }
 
 export interface Props {
-
+  state: PomodoroState
 }
 
 export const enum Event {
@@ -53,10 +54,23 @@ const cloneFormData = (formData: FormData): FormData => {
 const options: ComponentOption = {
   name: 'TodoInputbar',
 
+  props: {
+    state: {
+      type: String as PropType<PomodoroState>,
+      required: true,
+    },
+  },
+
   data() {
     return {
       formData: craeteFormData(),
     }
+  },
+
+  computed: {
+    rootClassName() {
+      return [`is-${this.state}`]
+    },
   },
 
   methods: {
@@ -90,6 +104,7 @@ const options: ComponentOption = {
   render(h) {
     return h('form', {
       staticClass: 'todo-inputbar',
+      class: this.rootClassName,
       on: { submit: this.handleFormSubmit }
     }, [
       h('input', {

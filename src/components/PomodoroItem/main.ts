@@ -1,11 +1,12 @@
 import Vue from 'vue';
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
+import { ThisTypedComponentOptionsWithRecordProps, PropType } from 'vue/types/options';
 import { CombinedVueInstance } from 'vue/types/vue';
 import { VNode } from 'vue/types/umd';
 import PomodoroCounterItem from '@/components/PomodoroCounterItem/Main.vue';
 import { Props as PomodoroCounterItemProps } from '@/components/PomodoroCounterItem/main';
 import Checkbox from '@/components/Checkbox/Main.vue';
 import { Props as CheckboxProps, Event as CheckboxEvent } from '@/components/Checkbox/main';
+import { State as PomodoroState } from '@/models/pomodoro-item';
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<Instance, Data, Methods, Computed, Props>;
 
@@ -26,6 +27,7 @@ export interface Methods {
 export interface Computed {
   $$counters: VNode
   $$timer: VNode
+  rootClassName: string[]
 }
 
 export interface Props {
@@ -34,10 +36,15 @@ export interface Props {
   timerText: string
   timerPercent: number
   counter: number
+  state: PomodoroState
 }
 
 export const enum Event {
   ClickCheckbox = 'click-checkbox',
+}
+
+export type Handlers = {
+  [Event.ClickCheckbox](): void
 }
 
 const options: ComponentOption = {
@@ -64,6 +71,10 @@ const options: ComponentOption = {
       type: Number,
       required: true,
     },
+    state: {
+      type: String as PropType<PomodoroState>,
+      required: true,
+    },
   },
 
   computed: {
@@ -75,7 +86,7 @@ const options: ComponentOption = {
           const key = `item-${i}`
           const isLast = i === (this.counter - 1)
           const props: PomodoroCounterItemProps = {
-            percent: isLast ? this.timerPercent : 100
+            percent: isLast && this.state === PomodoroState.Work ? this.timerPercent : 100
           }
 
           return h(PomodoroCounterItem, { key, props })
@@ -88,6 +99,10 @@ const options: ComponentOption = {
       return h('div', { staticClass: 'pomodoro-item__timer' }, [
         this.timerText,
       ])
+    },
+
+    rootClassName() {
+      return [`is-${this.state}`]
     },
   },
 
@@ -104,7 +119,7 @@ const options: ComponentOption = {
     const checkboxListeners = {
       [CheckboxEvent.Click]: this.handleCheckboxClick,
     }
-    return h('div', { staticClass: 'pomodoro-item' }, [
+    return h('div', { staticClass: 'pomodoro-item', class: this.rootClassName }, [
       h('div', { staticClass: 'pomodoro-item__todo-info' }, [
         h(Checkbox, { props: checkboxProps, on: checkboxListeners }),
         h('div', { staticClass: 'pomodoro-item__todo-content' }, [

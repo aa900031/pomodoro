@@ -4,6 +4,26 @@
 
 @include b(pomodoro-item) {
 
+  @include when(work) {
+    @include e(text) {
+      color: $work-text-color;
+    }
+
+    @include e(timer) {
+      color: $work-main-color;
+    }
+  }
+
+  @include when(break) {
+    @include e(text) {
+      color: $break-text-color;
+    }
+
+    @include e(timer) {
+      color: $break-main-color;
+    }
+  }
+
   @include e(todo-info) {
     display: flex;
     flex-direction: row;

@@ -1,0 +1,52 @@
+@import '@/styles/var.scss';
+@import '@/styles/bem.scss';
+
+$bg-split-percent: 100% - (450 / 1280 * 100%);
+
+@include b(home) {
+  height: 100vh;
+  width: 100vw;
+  padding: 48px 85px;
+  display: flex;
+
+  @include when(work) {
+    background: linear-gradient(90deg, $work-bg-color $bg-split-percent, $base-bg-color 0);
+  }
+
+  @include when(break) {
+    background: linear-gradient(90deg, $break-bg-color $bg-split-percent, $base-bg-color 0);
+  }
+
+  @include e(todo-warpper) {
+    flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 455px;
+
+    @include e(todo-inputbar-wrapper) {
+      flex: 0 0 auto;
+    }
+
+    @include e(todo-current-wrapper) {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    @include e(todo-list-wrapper) {
+      flex: 0 0 auto;
+    }
+  }
+
+  @include e(progress-round-wrapper) {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @include e(navbar-wrapper) {
+    flex: 0 0 auto;
+  }
+}

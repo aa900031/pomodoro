@@ -58,10 +58,10 @@ const options: ComponentOption = {
 
   methods: {
     handleCheckboxClick() {
-      this.$emit(Event.ClickCheckbox)
+      this.$emit(Event.ClickCheckbox, this.data)
     },
     handlePlayClick() {
-      this.$emit(Event.ClickPlay)
+      this.$emit(Event.ClickPlay, this.data)
     },
   },
 

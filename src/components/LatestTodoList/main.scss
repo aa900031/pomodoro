@@ -2,6 +2,17 @@
 @import '@/styles/bem.scss';
 
 @include b(latest-todo-list) {
+  @include when(work) {
+    @include e(btn-more) {
+      color: $work-main-color;
+    }
+  }
+
+  @include when(break) {
+    @include e(btn-more) {
+      color: $break-main-color;
+    }
+  }
 
   @include e(footer) {
     display: flex;
@@ -12,7 +23,6 @@
       cursor: pointer;
       font-size: 16px;
       font-weight: bold;
-      color: $work-main-color;
     }
   }
 }

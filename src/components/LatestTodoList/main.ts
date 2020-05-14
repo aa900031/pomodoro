@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
+import { ThisTypedComponentOptionsWithRecordProps, PropType } from 'vue/types/options';
 import { CombinedVueInstance } from 'vue/types/vue';
 import { TodoItem } from '@/models/todo-item';
 import TodoItemComponent from '@/components/TodoItem/Main.vue';
@@ -8,6 +8,7 @@ import {
   Event as TodoItemEvent,
   Handlers as TodoItemHandlers,
 } from '@/components/TodoItem/main';
+import { State as PomodoroState } from '@/models/pomodoro-item';
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<Instance, Data, Methods, Computed, Props>;
 
@@ -28,11 +29,12 @@ export interface Methods {
 }
 
 export interface Computed {
-
+  rootClassName: string[]
 }
 
 export interface Props {
   data: TodoItem[]
+  state: PomodoroState
 }
 
 export const enum Event {
@@ -54,7 +56,11 @@ const options: ComponentOption = {
     data: {
       type: Array,
       required: true,
-    }
+    },
+    state: {
+      type: String as PropType<PomodoroState>,
+      required: true,
+    },
   },
 
   methods: {
@@ -69,8 +75,14 @@ const options: ComponentOption = {
     },
   },
 
+  computed: {
+    rootClassName() {
+      return [`is-${this.state}`]
+    },
+  },
+
   render(h) {
-    return h('div', { staticClass: 'latest-todo-list' }, [
+    return h('div', { staticClass: 'latest-todo-list', class: this.rootClassName }, [
       this.data.map((todoItem) => {
         const key = `todo-item-${todoItem.id}`
         const props: TodoItemProps = {
