@@ -1,0 +1,82 @@
+@import '@/styles/var.scss';
+@import '@/styles/bem.scss';
+
+@include b(pomodoro-round) {
+  width: 350px;
+  height: 175px;
+  border-radius: 350px 350px 0 0;
+
+  @include when(work) {
+    background-color: $work-bg-color;
+
+    @include e(action-btn) {
+      background-color: $work-main-color;
+      .material-icons {
+        color: $work-main-color;
+      }
+    }
+
+    @include e(timer) {
+      color: $work-main-color;
+    }
+  }
+
+  @include when(break) {
+    background-color: $break-bg-color;
+
+    @include e(action-btn) {
+      background-color: $break-main-color;
+      .material-icons {
+        color: $break-main-color;
+      }
+    }
+
+    @include e(timer) {
+      color: $break-main-color;
+    }
+  }
+
+  @include e(action-btn) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 110px;
+    width: 110px;
+    border-radius: 50%;
+    border: 6px solid $base-bg-color;
+
+    margin: 0 auto;
+    margin-top: -50px;
+    cursor: pointer;
+
+    @include e(action-btn-inner) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 90px;
+      width: 90px;
+      border-radius: 50%;
+      border: 6px solid $base-bg-color;
+      background-color: #fff;
+
+      .material-icons {
+        font-size: 95px;
+      }
+    }
+  }
+
+  @include e(content) {
+    text-align: center;
+
+    @include e(timer) {
+      font-weight: bold;
+      font-size: 64px;
+    }
+
+    @include e(todo) {
+      font-weight: bold;
+      font-size: 16px;
+      color: $work-text-color;
+    }
+  }
+}
