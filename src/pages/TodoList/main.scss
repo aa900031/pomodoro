@@ -1,0 +1,35 @@
+@import '@/styles/var.scss';
+@import '@/styles/bem.scss';
+
+@include b(todo-list) {
+  height: 100vh;
+  width: 100vw;
+  background-color: $base-bg-color;
+  padding: 48px 85px 0px;
+  display: flex;
+
+  @include e(left-wrapper) {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 350px;
+
+    @include e(sidebar-wrapper) {
+      flex: 1 1 auto;
+    }
+  }
+
+  @include e(content-wrapper) {
+    flex: 1 1 100%;
+    overflow: scroll;
+
+    @include e(content) {
+      margin: 0 auto;
+      max-width: 445px;
+    }
+  }
+
+  @include e(right-wrapper) {
+    flex: 0 0 auto;
+    padding-bottom: 48px;
+  }
+}
