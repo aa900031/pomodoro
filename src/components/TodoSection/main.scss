@@ -1,0 +1,30 @@
+@import '@/styles/var.scss';
+@import '@/styles/bem.scss';
+
+@include b(todo-section) {
+  margin-top: 50px;
+
+  @include e(header) {
+    display: flex;
+    align-items: center;
+    background-color: rgba(#fff, $alpha: 0.2);
+    padding: 8px 16px;
+    cursor: pointer;
+    user-select: none;
+
+    @include e(title) {
+      flex: 1 1 100%;
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .material-icons {
+      color: #fff;
+    }
+  }
+
+  @include e(body) {
+    transition: .5s;
+    overflow: hidden;
+  }
+}
