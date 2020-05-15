@@ -49,6 +49,7 @@ export const enum Getter {
   CurrentTodoItem = 'currentTodoItem',
   CurrentTimerText = 'currentTimerText',
   CurrentTimerPercent = 'currentTimerPercent',
+  CurrentState = 'currentState',
   IsActive = 'isActive',
   ItemByTodoId = 'itemByTodoId',
   NextItemByTodoId = 'nextItemByTodoId',
@@ -59,6 +60,7 @@ export type GetterValue = {
   [Getter.CurrentTodoItem]: TodoItem | null
   [Getter.CurrentTimerText]: string | null
   [Getter.CurrentTimerPercent]: number | null
+  [Getter.CurrentState]: PomodoroState
   [Getter.IsActive]: boolean
   [Getter.ItemByTodoId]: (todoId: TodoId) => PomodoroItem | null
   [Getter.NextItemByTodoId]: (todoId: TodoId) => PomodoroItem | null
@@ -171,6 +173,10 @@ export const regist = <RS>(store: Store<RS>, path: string = 'pomodoro') => {
         if (!currentItem) return null
 
         return currentItem.timer / Timer[currentItem.state]
+      },
+      [Getter.CurrentState]: (state, getters): GetterValue[Getter.CurrentState] => {
+        const currentItem: GetterValue[Getter.CurrentItem] = getters[Getter.CurrentItem];
+        return currentItem ? currentItem.state : PomodoroState.Work
       },
       [Getter.IsActive]: (state, getters): GetterValue[Getter.IsActive] => {
         const currentItem: GetterValue[Getter.CurrentItem] = getters[Getter.CurrentItem];

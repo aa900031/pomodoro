@@ -25,32 +25,31 @@ export type MutationPayload = {
 
 export const enum Getter {
   LatestList = 'latestList',
-  CompleteList = 'completeList',
-  NoCompleteList = 'noCompleteList',
+  CompletedList = 'completedList',
+  IncompleteList = 'incompleteList',
   ItemById = 'itemById',
   NextItemById = 'nextItemById',
 }
 
 export type GetterValue = {
   [Getter.LatestList]: TodoItem[]
-  [Getter.CompleteList]: TodoItem[]
-  [Getter.NoCompleteList]: TodoItem[]
+  [Getter.CompletedList]: TodoItem[]
+  [Getter.IncompleteList]: TodoItem[]
   [Getter.ItemById]: (id: TodoId) => TodoItem | null
   [Getter.NextItemById]: (id: TodoId) => TodoItem | null
 }
 
 export const enum Action {
   Add = 'add',
-  Complete = 'complete',
+  Toggle = 'toggle',
 }
 
 export type ActionPayload = {
   [Action.Add]: {
     name: string
   }
-  [Action.Complete]: {
-    id: TodoId
-    value: boolean
+  [Action.Toggle]: {
+    id: TodoId,
   }
 }
 
@@ -83,7 +82,7 @@ export const regist = <RS>(store: Store<RS>, path: string = 'todo') => {
         })
         return list
       },
-      [Getter.CompleteList]: (state): GetterValue[Getter.CompleteList] => {
+      [Getter.CompletedList]: (state): GetterValue[Getter.CompletedList] => {
         return state.indexes.filter((id) => {
           const item = state.data[id]
           if (!item) return false
@@ -94,7 +93,7 @@ export const regist = <RS>(store: Store<RS>, path: string = 'todo') => {
           return state.data[id]
         })
       },
-      [Getter.NoCompleteList]: (state): GetterValue[Getter.NoCompleteList] => {
+      [Getter.IncompleteList]: (state): GetterValue[Getter.IncompleteList] => {
         return state.indexes.filter((id) => {
           const item = state.data[id]
           if (!item) return false
@@ -153,22 +152,25 @@ export const regist = <RS>(store: Store<RS>, path: string = 'todo') => {
           root: true,
         })
       },
-      async [Action.Complete]({ commit, dispatch, getters, rootGetters }, payload: ActionPayload[Action.Complete]) {
+      async [Action.Toggle]({ commit, dispatch, getters, rootGetters }, payload: ActionPayload[Action.Toggle]) {
+        const todoId = payload.id
         const getTodoItem: GetterValue[Getter.ItemById] = getters[Getter.ItemById]
-        const targetTodoItem = getTodoItem(payload.id)
+        const targetTodoItem = getTodoItem(todoId)
         if (!targetTodoItem) return
 
+        const nextCompleteValue = !targetTodoItem.complete
         const isTargetTodoArePomodoroTodo = (() => {
           const currentTodoItem: PomodoroGetterValue[PomodoroGetter.CurrentTodoItem] = rootGetters[`pomodoro/${PomodoroGetter.CurrentTodoItem}`]
           return currentTodoItem === targetTodoItem
-        })()
+        })
 
-        if (isTargetTodoArePomodoroTodo) {
+        if (nextCompleteValue && isTargetTodoArePomodoroTodo()) {
           await dispatch(`pomodoro/${PomodoroAction.Complete}`, {}, { root: true })
         }
 
         const setCompletePayload: MutationPayload[Mutation.SetComplete] = {
-          ...payload,
+          id: todoId,
+          value: nextCompleteValue,
         }
         commit(Mutation.SetComplete, setCompletePayload)
       },

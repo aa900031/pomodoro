@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { ThisTypedComponentOptionsWithRecordProps, PropType } from 'vue/types/options';
 import { CombinedVueInstance } from 'vue/types/vue';
-import { State as PromodoroState } from '@/models/pomodoro-item';
+import { State as PomodoroState } from '@/models/pomodoro-item';
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<Instance, Data, Methods, Computed, Props>;
 
@@ -25,7 +25,7 @@ export interface Computed {
 }
 
 export interface Props {
-  state: PromodoroState
+  state: PomodoroState
   actived: boolean
   timePercent: number
 }
@@ -47,7 +47,7 @@ const options: ComponentOption = {
 
   props: {
     state: {
-      type: String as PropType<PromodoroState>,
+      type: String as PropType<PomodoroState>,
       required: true,
     },
     actived: {

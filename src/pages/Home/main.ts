@@ -42,7 +42,6 @@ import {
   Getter as PomodoroGetter,
   GetterValue as PomodoroGetterValue,
 } from '@/stores/pomodoro';
-import { State as PomodoroState } from '@/models/pomodoro-item';
 import { ROUTE_NAME_TODO_LIST } from '../TodoList/route';
 import { TodoId } from '@/models/todo-item';
 
@@ -76,7 +75,7 @@ export interface Computed {
   currentPomodoroItem: PomodoroGetterValue[PomodoroGetter.CurrentItem]
   currentPomodoroTimerText: PomodoroGetterValue[PomodoroGetter.CurrentTimerText]
   currentPomodoroTimerPercent: PomodoroGetterValue[PomodoroGetter.CurrentTimerPercent]
-  currentPomodoroState: PomodoroState
+  currentPomodoroState: PomodoroGetterValue[PomodoroGetter.CurrentState]
   currentTodoItem: PomodoroGetterValue[PomodoroGetter.CurrentTodoItem]
   isPomodoroActive: PomodoroGetterValue[PomodoroGetter.IsActive]
   rootClassName: string[]
@@ -106,8 +105,7 @@ const options: ComponentOption = {
       return this.$store.getters[`pomodoro/${PomodoroGetter.CurrentTimerPercent}`]
     },
     currentPomodoroState() {
-      const item = this.currentPomodoroItem
-      return item ? item.state : PomodoroState.Work
+      return this.$store.getters[`pomodoro/${PomodoroGetter.CurrentState}`]
     },
     isPomodoroActive() {
       return this.$store.getters[`pomodoro/${PomodoroGetter.IsActive}`]
