@@ -1,4 +1,5 @@
 import { TodoId } from './todo-item';
+import { genRamdomId } from '@/utils/generator';
 
 export enum State {
   Work = 'work',
@@ -22,7 +23,7 @@ export const Timer = Object.freeze({
 
 export const createPomodoroItem = (todoId: TodoId) => {
   return {
-    id: Date.now().toString(),
+    id: genRamdomId(),
     todoId,
     state: State.Work,
     timer: Timer[State.Work],

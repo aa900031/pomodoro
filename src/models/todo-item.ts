@@ -1,3 +1,5 @@
+import { genRamdomId } from '@/utils/generator'
+
 export type TodoId = string
 
 export interface TodoItem {
@@ -8,7 +10,7 @@ export interface TodoItem {
 
 export const createTodoItem = (name: string): TodoItem => {
   return {
-    id: Date.now().toString(),
+    id: genRamdomId(),
     name,
     complete: false
   }
