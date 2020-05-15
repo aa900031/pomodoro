@@ -1,0 +1,23 @@
+@import '@/styles/var.scss';
+@import '@/styles/bem.scss';
+
+@include b(sidebar) {
+  @include e(item) {
+    display: flex;
+    font-size: 36px;
+    color: rgba(#fff, 0.2);
+    margin-bottom: 42px;
+    font-weight: bold;
+    text-decoration: none;
+    align-items: center;
+
+    &.router-link-exact-active {
+      color: $work-main-color
+    }
+
+    .material-icons {
+      font-size: 36px;
+      margin-right: 8px;
+    }
+  }
+}
