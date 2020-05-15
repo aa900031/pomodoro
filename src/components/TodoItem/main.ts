@@ -4,6 +4,7 @@ import { CombinedVueInstance } from 'vue/types/vue';
 import Checkbox from '@/components/Checkbox/Main.vue';
 import { Props as CheckboxProps, Event as CheckboxEvent } from '@/components/Checkbox/main';
 import { TodoItem } from '@/models/todo-item';
+import { VNode } from 'vue/types/umd';
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<Instance, Data, Methods, Computed, Props>;
 
@@ -23,11 +24,14 @@ export interface Methods {
 }
 
 export interface Computed {
-  checkboxIconName: string
+  $$btnPlay: VNode
+  $$checkbox: VNode
+  rootClassName: Record<string, boolean>[]
 }
 
 export interface Props {
-  data: TodoItem,
+  data: TodoItem
+  white?: boolean
 }
 
 export const enum Event {
@@ -47,12 +51,39 @@ const options: ComponentOption = {
     data: {
       type: Object,
       required: true,
-    }
+    },
+    white: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
-    checkboxIconName() {
-      return this.data.complete ? 'radio_button_checked' : 'radio_button_unchecked'
+    rootClassName() {
+      return [{
+        'is-checked': this.data.complete,
+        'is-white': !!this.white,
+      }]
+    },
+    $$btnPlay() {
+      const h = this.$createElement;
+      if (this.data.complete) return h()
+
+      return h('div', { staticClass: 'todo-item__btn-play', on: { click: this.handlePlayClick } }, [
+        h('span', { staticClass: 'material-icons' }, 'play_circle_outline'),
+      ])
+    },
+    $$checkbox() {
+      const h = this.$createElement
+
+      const props: CheckboxProps = {
+        checked: this.data.complete,
+      }
+      const listeners = {
+        [CheckboxEvent.Click]: this.handleCheckboxClick
+      }
+
+      return h(Checkbox, { props: props, on: listeners })
     },
   },
 
@@ -66,18 +97,10 @@ const options: ComponentOption = {
   },
 
   render(h) {
-    const checkboxProps: CheckboxProps = {
-      checked: this.data.complete,
-    }
-    const checkboxListeners = {
-      [CheckboxEvent.Click]: this.handleCheckboxClick
-    }
-    return h('div', { staticClass: 'todo-item' }, [
-      h(Checkbox, { props: checkboxProps, on: checkboxListeners }),
+    return h('div', { staticClass: 'todo-item', class: this.rootClassName }, [
+      this.$$checkbox,
       h('div', { staticClass: 'todo-item__text' }, this.data.name),
-      h('div', { staticClass: 'todo-item__btn-play', on: { click: this.handlePlayClick } }, [
-        h('span', { staticClass: 'material-icons' }, 'play_circle_outline'),
-      ])
+      this.$$btnPlay,
     ]);
   },
 };

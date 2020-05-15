@@ -8,6 +8,20 @@
   padding: 12px 0;
   border-bottom: 1px solid mix(#fff, $base-bg-color, 80%);
 
+  @include when(checked) {
+    @include e(text) {
+      text-decoration: line-through;
+      font-style: italic;
+    }
+  }
+
+  @include when(white) {
+    color: #fff;
+    .checkbox {
+      color: #fff;
+    }
+  }
+
   .checkbox {
     flex: 0 0 auto;
     width: 24px;

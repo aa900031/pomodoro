@@ -26,7 +26,7 @@ export interface Computed {
 }
 
 export interface Props {
-  state: PomodoroState
+  state?: PomodoroState
 }
 
 export const enum Event {
@@ -57,7 +57,7 @@ const options: ComponentOption = {
   props: {
     state: {
       type: String as PropType<PomodoroState>,
-      required: true,
+      default: PomodoroState.Work,
     },
   },
 

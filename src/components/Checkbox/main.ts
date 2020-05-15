@@ -42,7 +42,7 @@ const options: ComponentOption = {
 
   computed: {
     checkboxIconName() {
-      return this.checked ? 'radio_button_checked' : 'radio_button_unchecked'
+      return this.checked ? 'check_circle_outline' : 'radio_button_unchecked'
     },
   },
 
