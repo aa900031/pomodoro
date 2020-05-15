@@ -83,17 +83,19 @@ const options: ComponentOption = {
 
   render(h) {
     return h('div', { staticClass: 'latest-todo-list', class: this.rootClassName }, [
-      this.data.map((todoItem) => {
-        const key = `todo-item-${todoItem.id}`
-        const props: TodoItemProps = {
-          data: todoItem,
-        }
-        const listeners = {
-          [TodoItemEvent.ClickCheckbox]: this.handleItemCheckboxClick,
-          [TodoItemEvent.ClickPlay]: this.handleItemPlayClick,
-        }
-        return h(TodoItemComponent, { key, props, on: listeners })
-      }),
+      h('div', { staticClass: 'latest-todo-list__content' }, [
+        this.data.map((todoItem) => {
+          const key = `todo-item-${todoItem.id}`
+          const props: TodoItemProps = {
+            data: todoItem,
+          }
+          const listeners = {
+            [TodoItemEvent.ClickCheckbox]: this.handleItemCheckboxClick,
+            [TodoItemEvent.ClickPlay]: this.handleItemPlayClick,
+          }
+          return h(TodoItemComponent, { key, props, on: listeners })
+        }),
+      ]),
       h('div', { staticClass: 'latest-todo-list__footer'}, [
         h('div', {
           staticClass: 'latest-todo-list__btn-more',

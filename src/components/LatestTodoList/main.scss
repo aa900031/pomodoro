@@ -2,6 +2,10 @@
 @import '@/styles/bem.scss';
 
 @include b(latest-todo-list) {
+  display: flex;
+  flex-direction: column;
+  height: 176px;
+
   @include when(work) {
     @include e(btn-more) {
       color: $work-main-color;
@@ -12,6 +16,10 @@
     @include e(btn-more) {
       color: $break-main-color;
     }
+  }
+
+  @include e(content) {
+    flex: 1 1 100%;
   }
 
   @include e(footer) {
