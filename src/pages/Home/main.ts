@@ -3,6 +3,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 import { CombinedVueInstance } from 'vue/types/vue';
 import NavBar from '@/components/Navbar/Main.vue';
 import {
+  Props as NavBarProps,
   Event as NavBarEvent,
 } from '@/components/Navbar/main';
 import TodoInputbar from '@/components/TodoInputbar/Main.vue';
@@ -42,6 +43,8 @@ import {
   GetterValue as PomodoroGetterValue,
 } from '@/stores/pomodoro';
 import { State as PomodoroState } from '@/models/pomodoro-item';
+import { ROUTE_NAME_TODO_LIST } from '../TodoList/route';
+import { TodoId } from '@/models/todo-item';
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<Instance, Data, Methods, Computed, Props>;
 
@@ -65,6 +68,7 @@ export interface Methods {
   handleLatestTodoListClickMore: LatestTodoListHandlers[LatestTodoListEvent.ClickMore]
   handlePomodoroItemClickCheckbox: PomodoroItemHandlers[PomodoroItemEvent.ClickCheckbox]
   handleNavbarClickTodo(): void
+  toggleTodoItem(id: TodoId): void
 }
 
 export interface Computed {
@@ -115,7 +119,7 @@ const options: ComponentOption = {
 
   methods: {
     handleNavbarClickTodo() {
-
+      this.$router.push({ name: ROUTE_NAME_TODO_LIST })
     },
     handleTodoInputbarSubmit(formData) {
       const addTodoPayload: TodoActionPayload[TodoAction.Add] = {
@@ -141,25 +145,21 @@ const options: ComponentOption = {
       this.$store.dispatch(`pomodoro/${PomodoroAction.PlayByTodoId}`, playPayload)
     },
     handleLatestTodoListClickItemCheckbox(item) {
-      const completePayload: TodoActionPayload[TodoAction.Complete] = {
-        id: item.id,
-        value: !item.complete,
-      }
-      this.$store.dispatch(`todo/${TodoAction.Complete}`, completePayload)
+      this.toggleTodoItem(item.id)
     },
     handleLatestTodoListClickMore() {
-
+      this.$router.push({ name: ROUTE_NAME_TODO_LIST })
     },
     handlePomodoroItemClickCheckbox() {
       const todoItem = this.currentTodoItem
       if (!todoItem) return
 
-      const completePayload: TodoActionPayload[TodoAction.Complete] = {
-        id: todoItem.id,
-        value: !todoItem.complete,
-      }
-      this.$store.dispatch(`todo/${TodoAction.Complete}`, completePayload)
-    }
+      this.toggleTodoItem(todoItem.id)
+    },
+    toggleTodoItem(id) {
+      const togglePayload: TodoActionPayload[TodoAction.Toggle] = { id }
+      this.$store.dispatch(`todo/${TodoAction.Toggle}`, togglePayload)
+    },
   },
 
   render(h) {
@@ -230,10 +230,14 @@ const options: ComponentOption = {
     })()
 
     const $navbar = (() => {
+      const props: NavBarProps = {
+        visibleClose: false,
+        visibleNavs: true,
+      }
       const listeners = {
         [NavBarEvent.ClickTodo]: this.handleNavbarClickTodo
       }
-      return h(NavBar, { on: listeners })
+      return h(NavBar, { props, on: listeners })
     })()
 
     return h('div', { staticClass: 'home', class: this.rootClassName }, [
