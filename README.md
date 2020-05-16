@@ -1,6 +1,15 @@
-# pomodoro
+# Pomodoro 番茄鐘
+[Demo 網址](https://pomodoro-zhong666.now.sh/)
 
-## Project setup
+## 使用技術
+- TypeScript
+- Vue
+- Vue router
+- Vuex
+- Scss
+
+
+## 專案開發
 ```
 yarn install
 ```
@@ -19,6 +28,3 @@ yarn build
 ```
 yarn lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
