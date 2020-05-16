@@ -14,6 +14,7 @@ $inner-size: $size - $gap;
   width: $size;
   background-color: transparent;
   border: 4px solid;
+  position: relative;
 
   @include when(work) {
     border-color: $work-main-color;

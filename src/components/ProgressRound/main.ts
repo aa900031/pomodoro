@@ -2,6 +2,10 @@ import Vue from 'vue';
 import { ThisTypedComponentOptionsWithRecordProps, PropType } from 'vue/types/options';
 import { CombinedVueInstance } from 'vue/types/vue';
 import { State as PomodoroState } from '@/models/pomodoro-item';
+import Ring from './Ring.vue';
+import {
+  Props as RingProps,
+} from './ring';
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<Instance, Data, Methods, Computed, Props>;
 
@@ -90,7 +94,13 @@ const options: ComponentOption = {
       click: this.handleBtnStopClick,
     }
 
+    const ringProps: RingProps = {
+      percent: this.timePercent,
+      state: this.state,
+    }
+
     return h('div', { staticClass: 'progress-round', class: this.rootClassName }, [
+      h(Ring, { props: ringProps }),
       h('div', { staticClass: 'progress-round__content' }, [
         h('div', { staticClass: 'progress-round__actions' }, [
           h('div', { staticClass: 'progress-round__btn-main', on: btnMainListeners }, [
