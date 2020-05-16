@@ -28,7 +28,7 @@ export const enum Getter {
   CompletedList = 'completedList',
   IncompleteList = 'incompleteList',
   ItemById = 'itemById',
-  NextItemById = 'nextItemById',
+  LatestIncompleteItem = 'latestIncompleteItem',
 }
 
 export type GetterValue = {
@@ -36,7 +36,7 @@ export type GetterValue = {
   [Getter.CompletedList]: TodoItem[]
   [Getter.IncompleteList]: TodoItem[]
   [Getter.ItemById]: (id: TodoId) => TodoItem | null
-  [Getter.NextItemById]: (id: TodoId) => TodoItem | null
+  [Getter.LatestIncompleteItem]: TodoItem | null
 }
 
 export const enum Action {
@@ -71,7 +71,7 @@ export const regist = <RS>(store: Store<RS>, path: string = 'todo') => {
         const list: GetterValue[Getter.LatestList] = []
         const currentPomodoroItem: PomodoroGetterValue[PomodoroGetter.CurrentItem] = rootGetters[`pomodoro/${PomodoroGetter.CurrentItem}`]
 
-        state.indexes.forEach((id) => {
+        state.indexes.slice().reverse().forEach((id) => {
           const item = state.data[id]
           if (!item) return
           if (item.complete) return
@@ -107,21 +107,17 @@ export const regist = <RS>(store: Store<RS>, path: string = 'todo') => {
       [Getter.ItemById]: (state): GetterValue[Getter.ItemById] => (id) => {
         return state.data[id]
       },
-      [Getter.NextItemById]: (state): GetterValue[Getter.NextItemById] => (id) => {
-        const currentIndex = state.indexes.indexOf(id)
-        if (currentIndex < 0) return null
-        const findCorrectItem = (currentIndex: number): TodoItem | null => {
-          const nextIndex = currentIndex + 1
-          const nextId = state.indexes[nextIndex]
-          if (!nextId) return null
-          const item = state.data[nextId]
-          if (!item) return null
-          if (item.complete) return findCorrectItem(nextIndex)
-          return item
-        }
+      [Getter.LatestIncompleteItem]: (state): GetterValue[Getter.LatestIncompleteItem] => {
+        const latestId = state.indexes.slice().reverse().find((id) => {
+          const item = state.data[id]
+          if (!item) return false
+          if (item.complete) return false
+          return true
+        })
 
-        return findCorrectItem(currentIndex)
-      }
+        if (!latestId) return null
+        return state.data[latestId]
+      },
     },
 
     mutations: {
@@ -159,6 +155,12 @@ export const regist = <RS>(store: Store<RS>, path: string = 'todo') => {
         if (!targetTodoItem) return
 
         const nextCompleteValue = !targetTodoItem.complete
+        const setCompletePayload: MutationPayload[Mutation.SetComplete] = {
+          id: todoId,
+          value: nextCompleteValue,
+        }
+        commit(Mutation.SetComplete, setCompletePayload)
+
         const isTargetTodoArePomodoroTodo = (() => {
           const currentTodoItem: PomodoroGetterValue[PomodoroGetter.CurrentTodoItem] = rootGetters[`pomodoro/${PomodoroGetter.CurrentTodoItem}`]
           return currentTodoItem === targetTodoItem
@@ -167,12 +169,6 @@ export const regist = <RS>(store: Store<RS>, path: string = 'todo') => {
         if (nextCompleteValue && isTargetTodoArePomodoroTodo()) {
           await dispatch(`pomodoro/${PomodoroAction.Complete}`, {}, { root: true })
         }
-
-        const setCompletePayload: MutationPayload[Mutation.SetComplete] = {
-          id: todoId,
-          value: nextCompleteValue,
-        }
-        commit(Mutation.SetComplete, setCompletePayload)
       },
     },
   }

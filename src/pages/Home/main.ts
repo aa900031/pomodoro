@@ -132,8 +132,6 @@ const options: ComponentOption = {
       this.$store.dispatch(`pomodoro/${PomodoroAction.Pause}`)
     },
     handleProgressRoundClickStop() {
-      console.log('click stop');
-
       this.$store.dispatch(`pomodoro/${PomodoroAction.Stop}`)
     },
     handleLatestTodoListClickItemPlay(item) {

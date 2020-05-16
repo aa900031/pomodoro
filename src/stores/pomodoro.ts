@@ -52,7 +52,7 @@ export const enum Getter {
   CurrentState = 'currentState',
   IsActive = 'isActive',
   ItemByTodoId = 'itemByTodoId',
-  NextItemByTodoId = 'nextItemByTodoId',
+  LatestItem = 'latestItem',
 }
 
 export type GetterValue = {
@@ -63,7 +63,7 @@ export type GetterValue = {
   [Getter.CurrentState]: PomodoroState
   [Getter.IsActive]: boolean
   [Getter.ItemByTodoId]: (todoId: TodoId) => PomodoroItem | null
-  [Getter.NextItemByTodoId]: (todoId: TodoId) => PomodoroItem | null
+  [Getter.LatestItem]: PomodoroItem | null
 }
 
 export const enum Action {
@@ -194,12 +194,11 @@ export const regist = <RS>(store: Store<RS>, path: string = 'pomodoro') => {
 
         return state.data[pomodoroId]
       },
-      [Getter.NextItemByTodoId]: (state, getters, rootState, rootGetters): GetterValue[Getter.NextItemByTodoId] => (todoId) => {
-        const getNextTodoItem: TodoGetterValue[TodoGetter.NextItemById] = rootGetters[`todo/${TodoGetter.NextItemById}`]
-        const nextTodoItem = getNextTodoItem(todoId)
-        if (!nextTodoItem) return null
+      [Getter.LatestItem]: (state, getters, rootState, rootGetters): GetterValue[Getter.LatestItem] => {
+        const latestTodoItem: TodoGetterValue[TodoGetter.LatestIncompleteItem] = rootGetters[`todo/${TodoGetter.LatestIncompleteItem}`]
+        if (!latestTodoItem) return null
         const getItemByTodoId: GetterValue[Getter.ItemByTodoId] = getters[Getter.ItemByTodoId]
-        return getItemByTodoId(nextTodoItem.id)
+        return getItemByTodoId(latestTodoItem.id)
       }
     },
 
@@ -298,15 +297,11 @@ export const regist = <RS>(store: Store<RS>, path: string = 'pomodoro') => {
         if (!item) {
           throw new Error('null of item')
         }
-        const currentTodoId = item.todoId
-
         await dispatch(Action.Pause)
 
-        const getNextItemByTodoId: GetterValue[Getter.NextItemByTodoId] = getters[Getter.NextItemByTodoId]
-        const nextItem = getNextItemByTodoId(currentTodoId)
-
+        const latestItem: GetterValue[Getter.LatestItem] = getters[Getter.LatestItem]
         const setCurrentIdPayload: MutationPayload[Mutation.SetCurrentId] = {
-          value: nextItem ? nextItem.id : null
+          value: latestItem ? latestItem.id : null
         }
         commit(Mutation.SetCurrentId, setCurrentIdPayload)
       },
